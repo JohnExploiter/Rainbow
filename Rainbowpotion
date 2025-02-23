@@ -1,0 +1,36 @@
+local TweenService = game:GetService("TweenService")
+local players = game:GetService("Players")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local args = {
+    [1] = "Science_Bottle",
+    [2] = players.LocalPlayer.Character.Science_Bottle,
+    [3] = players.LocalPlayer:WaitForChild("Player_Settings"),
+    [4] = Color3.new(1, 0, 0) -- Start with Red (You can change this to any color to start)
+}
+
+-- Function to generate rainbow colors
+local function getRainbowColor(t)
+    return Color3.fromHSV(t % 1, 1, 1)  -- t will loop through a full range (0 to 1) for hue
+end
+
+-- Tween the color to smoothly transition
+local function smoothRainbowTransition()
+    local currentTime = tick()
+    
+    -- Infinite loop to transition colors smoothly over time
+    while true do
+        local hue = (tick() - currentTime) * 0.1  -- Speed of color change, can be adjusted
+        local rainbowColor = getRainbowColor(hue)
+        
+        args[4] = rainbowColor
+        
+        -- Fire the event with the updated color
+        replicatedStorage:WaitForChild("Events"):WaitForChild("Tools"):FireServer(unpack(args))
+        
+        wait(0.1)  -- Small delay for smoothness
+    end
+end
+
+-- Start the smooth transition
+smoothRainbowTransition()
